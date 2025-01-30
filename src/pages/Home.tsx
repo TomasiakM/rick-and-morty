@@ -1,13 +1,45 @@
-import { Link  } from 'react-router'
+import { useEffect, useState } from 'react';
+import { IPaginated } from '../types/Pagination';
+import { ICharacter } from '../types/Character';
+import { Button, DimmerDimmable, Dimmer, Loader } from 'semantic-ui-react';
+import CharacterList from '../components/character/List';
+import { getPaginated } from '../api/characterService';
 
-function Home() {
-  return (
-    <>
-      <h3>Home page</h3>
-      <div><Link to='/character/1'>Character 1</Link></div>
-      <div><Link to='/character/2'>Character 2</Link></div>
+const Home = () => {
+    const [isLoading, setIsLoading] = useState(true);
+    const [isError, setIsError] = useState(true);
+    const [data, setData] = useState(null as IPaginated<ICharacter> | null);
+    
+    const fetchData = () => {
+        setIsLoading(true)
+        setIsError(false)
+
+        getPaginated({ page: 1 })
+            .then(data => setData(data))
+            .catch(() => setIsError(true))
+            .finally(() => setIsLoading(false))
+    }
+
+    useEffect(() => {
+        fetchData();
+    }, [])
+
+    if(isError){
+        return <>
+            <div>Somethind went wrong...</div>
+            <Button color='red' onClick={fetchData}>Try again</Button>
+        </>
+    }
+
+    return <>
+        <DimmerDimmable blurring dimmed={isLoading} style={{ minHeight: '200px'}}>
+            <Dimmer inverted active={isLoading}>
+                <Loader active={isLoading} size='medium'>Loading</Loader>
+            </Dimmer>
+
+            <CharacterList characters={data?.results || []} />
+        </DimmerDimmable>
     </>
-  )
 }
 
 export default Home
