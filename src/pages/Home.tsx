@@ -4,6 +4,7 @@ import { ICharacter } from '../types/Character';
 import { Button, DimmerDimmable, Dimmer, Loader, Pagination } from 'semantic-ui-react';
 import CharacterList from '../components/character/List';
 import { getPaginated } from '../api/characterService';
+import StatusFilterDropdown from '../components/character/StatusFilterDropdown';
 
 const Home = () => {
     const [isLoading, setIsLoading] = useState(true);
@@ -11,12 +12,13 @@ const Home = () => {
     const [data, setData] = useState(null as IPaginated<ICharacter> | null);
     
     const [page, setPage] = useState(1);
+    const [status, setStatus] = useState('')
 
     const fetchData = () => {
         setIsLoading(true)
         setIsError(false)
 
-        getPaginated({ page })
+        getPaginated({ page, status })
             .then(data => setData(data))
             .catch(() => setIsError(true))
             .finally(() => setIsLoading(false))
@@ -25,6 +27,14 @@ const Home = () => {
     useEffect(() => {
         fetchData();
     }, [page])
+
+    useEffect(() => {
+        if(page === 1){
+            return fetchData();
+        }
+        
+        setPage(1)
+    }, [status])
 
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -39,6 +49,11 @@ const Home = () => {
     }
 
     return <>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <h3 style={{ margin: 0 }}>Characters</h3>
+            <StatusFilterDropdown setStatus={setStatus} />
+        </div>
+
         <DimmerDimmable blurring dimmed={isLoading} style={{ minHeight: '200px'}}>
             <Dimmer inverted active={isLoading}>
                 <Loader active={isLoading} size='medium'>Loading</Loader>
