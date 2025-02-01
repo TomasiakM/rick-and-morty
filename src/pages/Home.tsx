@@ -59,11 +59,13 @@ const Home = () => {
 
             <CharacterList characters={data?.results || []} />
 
-            {data && <Pagination 
-                style={{ margin: '1.5rem 0'}}
-                totalPages={data.info.pages} 
-                activePage={page}
-                onPageChange={(_, { activePage }) => setPage(Number(activePage))} />}
+            {data && <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <Pagination
+                    style={{ margin: '1.5rem 0' }}
+                    totalPages={data.info.pages} 
+                    activePage={page}
+                    onPageChange={(_, { activePage }) => setPage(Number(activePage))} />
+                </div>}
         </DimmerDimmable>
     </>
 }
