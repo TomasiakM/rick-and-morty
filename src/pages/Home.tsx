@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { IPaginated } from '../types/Pagination';
 import { ICharacter } from '../types/Character';
-import { Button, DimmerDimmable, Dimmer, Loader, Pagination } from 'semantic-ui-react';
+import { Button, DimmerDimmable, Header, Loader, Pagination } from 'semantic-ui-react';
 import CharacterList from '../components/character/List';
 import { getPaginated } from '../api/characterService';
 import StatusFilterDropdown from '../components/character/StatusFilterDropdown';
@@ -43,26 +43,24 @@ const Home = () => {
 
     if(isError){
         return <>
-            <div>Somethind went wrong...</div>
+            <div>Something went wrong...</div>
             <Button color='red' onClick={fetchData}>Try again</Button>
         </>
     }
 
     return <>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h3 style={{ margin: 0 }}>Characters</h3>
+        <div style={{ backgroundColor: '#b5cc18', padding: '0.5rem', borderRadius: '0.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Header as='h3' style={{ margin: 0, color: '#FAFAFA' }}>Characters</Header>
             <StatusFilterDropdown setStatus={setStatus} />
         </div>
 
         <DimmerDimmable blurring dimmed={isLoading} style={{ minHeight: '200px'}}>
-            <Dimmer inverted active={isLoading}>
-                <Loader active={isLoading} size='medium'>Loading</Loader>
-            </Dimmer>
+            <Loader active={isLoading} size='medium'>Loading</Loader>
 
             <CharacterList characters={data?.results || []} />
 
             {data && <Pagination 
-                style={{ margin: '12px 0'}}
+                style={{ margin: '1.5rem 0'}}
                 totalPages={data.info.pages} 
                 activePage={page}
                 onPageChange={(_, { activePage }) => setPage(Number(activePage))} />}

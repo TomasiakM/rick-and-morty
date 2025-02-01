@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { getByIds } from "../../api/episodeService";
 import { IEpisode } from "../../types/Episode";
-import { Button, Loader } from "semantic-ui-react";
+import { Button, Header, Loader } from "semantic-ui-react";
 
 interface IProps {
     episodes: string[]
@@ -37,10 +37,12 @@ const EpisodeList = ({ episodes }: IProps) => {
     if(isLoading) return <Loader active inline='centered' size='medium'>Loading episodes</Loader>
 
     return <div>
-        <h4>Played in {data.length} episode{data.length > 1 && 's'}</h4>
+        <Header as="h3" style={{  color: '#FAFAFA', backgroundColor: '#b5cc18', padding: '0.5rem', borderRadius: '0.5rem' }}>
+            Played in {data.length} episode{data.length > 1 && 's'}
+        </Header>
         <ul>
             {data.map(e => 
-                <li key={e.id}>{e.episode} - {e.name} ({e.air_date})</li>)}
+                <li key={e.id}><b>{e.episode}</b> - {e.name} ({e.air_date})</li>)}
         </ul>
     </div>
 } 

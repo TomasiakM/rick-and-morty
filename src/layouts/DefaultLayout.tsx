@@ -5,10 +5,10 @@ function DefaultLayout() {
 
   return (
     <div>
-      <header style={{ backgroundColor: '#b5cc18', padding: '10px 0', marginBottom: '0px' }}>
+      <header style={{ backgroundColor: '#b5cc18', padding: '1rem 0', marginBottom: '1.5rem' }}>
         <Container>
           <Header as='h1'>
-            <Link to="/" style={{ color: '#111111'}}>Rick and Morty</Link>
+            <Link to="/" style={{ color: '#FAFAFA'}}>Rick and Morty</Link>
           </Header>
         </Container>
       </header>
