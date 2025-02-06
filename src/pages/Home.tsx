@@ -5,20 +5,20 @@ import { Button, DimmerDimmable, Header, Loader, Pagination } from 'semantic-ui-
 import CharacterList from '../components/character/List';
 import { getPaginated } from '../api/characterService';
 import StatusFilterDropdown from '../components/character/StatusFilterDropdown';
+import GenderFilterDropdown from '../components/character/GenderFilterDropdown';
 
 const Home = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(true);
   const [data, setData] = useState(null as IPaginated<ICharacter> | null);
 
-  const [page, setPage] = useState(1);
-  const [status, setStatus] = useState('');
+  const [gender, setGender] = useState('');
 
   const fetchData = () => {
     setIsLoading(true);
     setIsError(false);
 
-    getPaginated({ page, status })
+    getPaginated({ page, status, gender })
       .then((data) => setData(data))
       .catch(() => setIsError(true))
       .finally(() => setIsLoading(false));
@@ -34,7 +34,7 @@ const Home = () => {
     }
 
     setPage(1);
-  }, [status]);
+  }, [status, gender]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -65,7 +65,11 @@ const Home = () => {
         <Header as="h3" style={{ margin: 0, color: '#FAFAFA' }}>
           Characters
         </Header>
-        <StatusFilterDropdown setStatus={setStatus} />
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+          <GenderFilterDropdown setGender={setGender} />
+          <StatusFilterDropdown setStatus={setStatus} />
+        </div>
       </div>
 
       <DimmerDimmable blurring dimmed={isLoading} style={{ minHeight: '200px' }}>

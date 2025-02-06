@@ -4,6 +4,7 @@ import { IPaginated } from '../types/Pagination';
 interface IGetPaginatedProps {
   page?: number;
   status?: string;
+  gender?: string;
 }
 
 interface IGetByIdProps {
@@ -14,9 +15,12 @@ const BASE_API = 'https://rickandmortyapi.com/api/character';
 
 export const getPaginated = ({
   page = 1,
-  status = ''
+  status = '',
+  gender = ''
 }: IGetPaginatedProps): Promise<IPaginated<ICharacter>> => {
-  return fetch(`${BASE_API}?page=${page}&status=${status}`).then((response) => response.json());
+  return fetch(`${BASE_API}?page=${page}&status=${status}&gender=${gender}`).then((response) =>
+    response.json()
+  );
 };
 
 export const getById = ({ id }: IGetByIdProps): Promise<ICharacter> => {
