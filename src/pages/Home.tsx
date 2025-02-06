@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router';
 import { IPaginated } from '../types/Pagination';
 import { ICharacter } from '../types/Character';
 import { Button, DimmerDimmable, Header, Loader, Pagination } from 'semantic-ui-react';
@@ -8,11 +9,22 @@ import StatusFilterDropdown from '../components/character/StatusFilterDropdown';
 import GenderFilterDropdown from '../components/character/GenderFilterDropdown';
 
 const Home = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const [isLoading, setIsLoading] = useState(true);
-  const [isError, setIsError] = useState(true);
+  const [isError, setIsError] = useState(false);
   const [data, setData] = useState(null as IPaginated<ICharacter> | null);
 
-  const [gender, setGender] = useState('');
+  const [page, setPage] = useState(Number(searchParams.get('page') || 1));
+  const [status, setStatus] = useState(searchParams.get('status') || '');
+  const [gender, setGender] = useState(searchParams.get('gender') || '');
+
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    setReady(true);
+    fetchData();
+  }, []);
 
   const fetchData = () => {
     setIsLoading(true);
@@ -24,16 +36,53 @@ const Home = () => {
       .finally(() => setIsLoading(false));
   };
 
+  const updateParams = () => {
+    setSearchParams((params) => {
+      params = new URLSearchParams();
+
+      if (page && page !== 1) {
+        params.set('page', page.toString());
+      }
+
+      if (status) {
+        params.set('status', status);
+      }
+
+      if (gender) {
+        params.set('gender', gender);
+      }
+
+      return params;
+    });
+  };
+
   useEffect(() => {
+    if (!ready) {
+      return;
+    }
+
+    setPage(Number(searchParams.get('page')) || 1);
+    setStatus(searchParams.get('status') || '');
+    setGender(searchParams.get('gender') || '');
+
     fetchData();
+  }, [searchParams]);
+
+  useEffect(() => {
+    if (!ready) {
+      return;
+    }
+
+    updateParams();
   }, [page]);
 
   useEffect(() => {
-    if (page === 1) {
-      return fetchData();
+    if (!ready) {
+      return;
     }
 
     setPage(1);
+    updateParams();
   }, [status, gender]);
 
   useEffect(() => {
@@ -67,8 +116,8 @@ const Home = () => {
         </Header>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-          <GenderFilterDropdown setGender={setGender} />
-          <StatusFilterDropdown setStatus={setStatus} />
+          <GenderFilterDropdown gender={gender} setGender={setGender} />
+          <StatusFilterDropdown status={status} setStatus={setStatus} />
         </div>
       </div>
 

@@ -3,6 +3,7 @@ import { Dropdown } from 'semantic-ui-react';
 
 interface IProps {
   setStatus: Dispatch<SetStateAction<string>>;
+  status: string;
 }
 
 const options = [
@@ -11,11 +12,12 @@ const options = [
   { text: 'unknown', value: 'unknown' }
 ];
 
-const StatusFilterDropdown = ({ setStatus }: IProps) => {
+const StatusFilterDropdown = ({ status, setStatus }: IProps) => {
   return (
     <Dropdown
       selection
       clearable
+      value={status}
       options={options}
       placeholder="Status filter"
       onChange={(_, { value }) => setStatus((value as string) || '')}
