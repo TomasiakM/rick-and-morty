@@ -9,7 +9,7 @@ function Character() {
   const params = useParams();
 
   const [isLoading, setIsLoading] = useState(true);
-  const [isError, setIsError] = useState(true);
+  const [isError, setIsError] = useState(false);
   const [character, setCharacter] = useState(null as ICharacter | null);
 
   const fetchData = () => {
