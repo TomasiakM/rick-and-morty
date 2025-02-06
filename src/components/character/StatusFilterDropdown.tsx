@@ -6,9 +6,9 @@ interface IProps {
 }
 
 const options = [
-  { key: 'alive', text: 'Alive', value: 'alive' },
-  { key: 'dead', text: 'Dead', value: 'dead' },
-  { key: 'unknown', text: 'unknown', value: 'unknown' }
+  { text: 'Alive', value: 'Alive' },
+  { text: 'Dead', value: 'Dead' },
+  { text: 'unknown', value: 'unknown' }
 ];
 
 const StatusFilterDropdown = ({ setStatus }: IProps) => {
