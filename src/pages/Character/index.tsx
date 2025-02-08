@@ -1,21 +1,9 @@
-import { useEffect } from 'react';
-import { useParams } from 'react-router';
 import { Grid, GridColumn, Header, Image, Loader } from 'semantic-ui-react';
-import EpisodeList from '../components/episode/List';
-import { AppDispatch, RootState } from '../state/store';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchCharacter } from '../state/characters/characterSlice';
+import EpisodeList from '../../components/episode/List';
+import { useCharacterPage } from './useCharacterPage';
 
 function Character() {
-  const params = useParams();
-  const dispatch = useDispatch<AppDispatch>();
-  const { error, isLoading, data } = useSelector((state: RootState) => state.character);
-
-  useEffect(() => {
-    const id = Number(params.id);
-
-    dispatch(fetchCharacter({ id }));
-  }, [params]);
+  const { error, isLoading, data } = useCharacterPage();
 
   if (error)
     return (
