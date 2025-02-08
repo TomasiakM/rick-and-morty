@@ -1,42 +1,27 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useParams } from 'react-router';
-import { getById } from '../api/characterService';
-import { ICharacter } from '../types/Character';
-import { Button, Grid, GridColumn, Header, Image, Loader } from 'semantic-ui-react';
+import { Grid, GridColumn, Header, Image, Loader } from 'semantic-ui-react';
 import EpisodeList from '../components/episode/List';
+import { AppDispatch, RootState } from '../state/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchCharacter } from '../state/characters/characterSlice';
 
 function Character() {
   const params = useParams();
-
-  const [isLoading, setIsLoading] = useState(true);
-  const [isError, setIsError] = useState(false);
-  const [character, setCharacter] = useState(null as ICharacter | null);
-
-  const fetchData = () => {
-    const idNumber = Number(params.id);
-    if (isNaN(idNumber)) return;
-
-    setIsLoading(true);
-    setIsError(false);
-
-    getById({ id: idNumber })
-      .then((e) => setCharacter(e))
-      .catch(() => setIsError(true))
-      .finally(() => setIsLoading(false));
-  };
+  const dispatch = useDispatch<AppDispatch>();
+  const { error, isLoading, data } = useSelector((state: RootState) => state.character);
 
   useEffect(() => {
-    fetchData();
+    const id = Number(params.id);
+
+    dispatch(fetchCharacter({ id }));
   }, [params]);
 
-  if (isError)
+  if (error)
     return (
-      <>
-        <div>Something went wrong...</div>
-        <Button color="red" onClick={fetchData}>
-          Try again
-        </Button>
-      </>
+      <Header as="h3" color="red" style={{ margin: '0 auto' }}>
+        {error}
+      </Header>
     );
 
   if (isLoading)
@@ -48,12 +33,12 @@ function Character() {
 
   return (
     <>
-      {character && (
+      {data && (
         <>
           <Grid style={{ marginTop: '0', marginBottom: '2rem' }}>
             <GridColumn mobile={16} tablet={8} computer={8}>
               <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <Image src={character.image} alt={character.name} />
+                <Image src={data.image} alt={data.name} />
               </div>
             </GridColumn>
             <GridColumn mobile={16} tablet={8} computer={8}>
@@ -65,40 +50,40 @@ function Character() {
                   justifyContent: 'center'
                 }}>
                 <Header as="h2" style={{ color: '#b5cc18' }}>
-                  {character.name}
+                  {data.name}
                 </Header>
                 <div>
-                  Gender: <b>{character.gender}</b>
+                  Gender: <b>{data.gender}</b>
                 </div>
                 <div>
-                  Status: <b>{character.status}</b>
+                  Status: <b>{data.status}</b>
                 </div>
                 <div>
-                  Species: <b>{character.species}</b>
+                  Species: <b>{data.species}</b>
                 </div>
-                {character.type && (
+                {data.type && (
                   <div>
-                    Type: <b>{character.type}</b>
+                    Type: <b>{data.type}</b>
                   </div>
                 )}
 
                 <br />
 
-                {character.location.name && (
+                {data.location.name && (
                   <div>
-                    Location: <b>{character.location.name}</b>
+                    Location: <b>{data.location.name}</b>
                   </div>
                 )}
-                {character.origin.name && (
+                {data.origin.name && (
                   <div>
-                    Origin: <b>{character.origin.name}</b>
+                    Origin: <b>{data.origin.name}</b>
                   </div>
                 )}
               </div>
             </GridColumn>
           </Grid>
 
-          <EpisodeList episodes={character.episode} />
+          <EpisodeList episodes={data.episode} />
         </>
       )}
     </>

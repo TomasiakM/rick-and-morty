@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import paginatedCharactersReducer from './characters/paginatedCharactersSlice';
+import characterReducer from './characters/characterSlice';
 
 export const store = configureStore({
   reducer: {
-    paginatedCharacters: paginatedCharactersReducer
+    paginatedCharacters: paginatedCharactersReducer,
+    character: characterReducer
   }
 });
 
