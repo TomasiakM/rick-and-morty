@@ -3,7 +3,7 @@ import EpisodeList from '../../components/episode/List';
 import { useCharacterPage } from './useCharacterPage';
 
 function Character() {
-  const { error, isLoading, data } = useCharacterPage();
+  const { error, isLoading, character, episodes } = useCharacterPage();
 
   if (error)
     return (
@@ -21,12 +21,12 @@ function Character() {
 
   return (
     <>
-      {data && (
+      {character && (
         <>
           <Grid style={{ marginTop: '0', marginBottom: '2rem' }}>
             <GridColumn mobile={16} tablet={8} computer={8}>
               <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <Image src={data.image} alt={data.name} />
+                <Image rounded src={character.image} alt={character.name} />
               </div>
             </GridColumn>
             <GridColumn mobile={16} tablet={8} computer={8}>
@@ -38,40 +38,40 @@ function Character() {
                   justifyContent: 'center'
                 }}>
                 <Header as="h2" style={{ color: '#b5cc18' }}>
-                  {data.name}
+                  {character.name}
                 </Header>
                 <div>
-                  Gender: <b>{data.gender}</b>
+                  Gender: <b>{character.gender}</b>
                 </div>
                 <div>
-                  Status: <b>{data.status}</b>
+                  Status: <b>{character.status}</b>
                 </div>
                 <div>
-                  Species: <b>{data.species}</b>
+                  Species: <b>{character.species}</b>
                 </div>
-                {data.type && (
+                {character.type && (
                   <div>
-                    Type: <b>{data.type}</b>
+                    Type: <b>{character.type}</b>
                   </div>
                 )}
 
                 <br />
 
-                {data.location.name && (
+                {character.location.name && (
                   <div>
-                    Location: <b>{data.location.name}</b>
+                    Location: <b>{character.location.name}</b>
                   </div>
                 )}
-                {data.origin.name && (
+                {character.origin.name && (
                   <div>
-                    Origin: <b>{data.origin.name}</b>
+                    Origin: <b>{character.origin.name}</b>
                   </div>
                 )}
               </div>
             </GridColumn>
           </Grid>
 
-          <EpisodeList episodes={data.episode} />
+          <EpisodeList episodes={episodes} />
         </>
       )}
     </>

@@ -1,15 +1,19 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { ICharacter } from '../../types/Character';
 import { getById } from '../../api/characterService';
+import { getByIds } from '../../api/episodeService';
+import { IEpisode } from '../../types/Episode';
 
 interface IState {
   error: string | null;
   isLoading: boolean;
-  data: ICharacter | null;
+  character: ICharacter | null;
+  episodes: IEpisode[];
 }
 
 const initialState: IState = {
-  data: null,
+  character: null,
+  episodes: [],
   isLoading: true,
   error: null
 };
@@ -18,12 +22,16 @@ interface IParams {
   id: number;
 }
 
-export const fetchCharacter = createAsyncThunk<ICharacter, IParams>(
-  'characters/getById',
-  async (params: IParams) => {
-    return await getById(params);
-  }
-);
+export const fetchCharacter = createAsyncThunk<
+  { character: ICharacter; episodes: IEpisode[] },
+  IParams
+>('characters/getById', async (params: IParams) => {
+  const character = await getById(params);
+  const episodeIds = character.episode.map((link) => link.split('/').pop() as string);
+  const episodes = await getByIds({ episodeIds });
+
+  return { character, episodes };
+});
 
 const characterSlice = createSlice({
   name: 'character',
@@ -38,7 +46,8 @@ const characterSlice = createSlice({
       .addCase(fetchCharacter.fulfilled, (state, action) => {
         state.isLoading = false;
         state.error = null;
-        state.data = action.payload;
+        state.character = action.payload.character;
+        state.episodes = action.payload.episodes;
       })
       .addCase(fetchCharacter.rejected, (state, action) => {
         state.isLoading = false;

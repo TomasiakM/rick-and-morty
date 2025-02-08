@@ -7,7 +7,9 @@ import { AppDispatch, RootState } from '../../state/store';
 export const useCharacterPage = () => {
   const params = useParams();
   const dispatch = useDispatch<AppDispatch>();
-  const { error, isLoading, data } = useSelector((state: RootState) => state.character);
+  const { error, isLoading, character, episodes } = useSelector(
+    (state: RootState) => state.character
+  );
 
   useEffect(() => {
     const id = Number(params.id);
@@ -15,5 +17,5 @@ export const useCharacterPage = () => {
     dispatch(fetchCharacter({ id }));
   }, [params]);
 
-  return { error, isLoading, data };
+  return { error, isLoading, character, episodes };
 };
