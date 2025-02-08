@@ -18,11 +18,23 @@ export const getPaginated = ({
   status = '',
   gender = ''
 }: IGetPaginatedProps): Promise<IPaginated<ICharacter>> => {
-  return fetch(`${BASE_API}?page=${page}&status=${status}&gender=${gender}`).then((response) =>
-    response.json()
-  );
+  return fetch(`${BASE_API}?page=${page}&status=${status}&gender=${gender}`)
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.error) {
+        throw new Error(data.error);
+      }
+      return data;
+    });
 };
 
 export const getById = ({ id }: IGetByIdProps): Promise<ICharacter> => {
-  return fetch(`${BASE_API}/${id}`).then((response) => response.json());
+  return fetch(`${BASE_API}/${id}`)
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.error) {
+        throw new Error(data.error);
+      }
+      return data;
+    });
 };
