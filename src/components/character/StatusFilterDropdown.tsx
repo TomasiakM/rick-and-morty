@@ -1,8 +1,7 @@
-import { Dispatch, SetStateAction } from 'react';
+import { useSearchParams } from 'react-router';
 import { Dropdown } from 'semantic-ui-react';
 
 interface IProps {
-  setStatus: Dispatch<SetStateAction<string>>;
   status: string;
 }
 
@@ -12,7 +11,17 @@ const options = [
   { text: 'unknown', value: 'unknown' }
 ];
 
-const StatusFilterDropdown = ({ status, setStatus }: IProps) => {
+const StatusFilterDropdown = ({ status }: IProps) => {
+  const [, setSearchParams] = useSearchParams();
+
+  const updateStatus = (status: string) => {
+    setSearchParams((params) => {
+      status ? params.set('status', status) : params.delete('status');
+
+      return params;
+    });
+  };
+
   return (
     <Dropdown
       selection
@@ -20,7 +29,7 @@ const StatusFilterDropdown = ({ status, setStatus }: IProps) => {
       value={status}
       options={options}
       placeholder="Status filter"
-      onChange={(_, { value }) => setStatus((value as string) || '')}
+      onChange={(_, { value }) => updateStatus((value as string) || '')}
     />
   );
 };

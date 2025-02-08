@@ -1,8 +1,7 @@
-import { Dispatch, SetStateAction } from 'react';
+import { useSearchParams } from 'react-router';
 import { Dropdown } from 'semantic-ui-react';
 
 interface IProps {
-  setGender: Dispatch<SetStateAction<string>>;
   gender: string;
 }
 
@@ -13,7 +12,17 @@ const options = [
   { text: 'unknown', value: 'unknown' }
 ];
 
-const StatusFilterDropdown = ({ gender, setGender }: IProps) => {
+const StatusFilterDropdown = ({ gender }: IProps) => {
+  const [, setSearchParams] = useSearchParams();
+
+  const updateGender = (gender: string) => {
+    setSearchParams((params) => {
+      gender ? params.set('gender', gender) : params.delete('gender');
+
+      return params;
+    });
+  };
+
   return (
     <Dropdown
       selection
@@ -21,7 +30,7 @@ const StatusFilterDropdown = ({ gender, setGender }: IProps) => {
       value={gender}
       options={options}
       placeholder="Gender filter"
-      onChange={(_, { value }) => setGender((value as string) || '')}
+      onChange={(_, { value }) => updateGender((value as string) || '')}
     />
   );
 };
